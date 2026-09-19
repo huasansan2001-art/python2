@@ -1,11 +1,9 @@
 """
 visualizer.py
 
-Plotting helpers shared by Sections 1 and 3 of the FMA analysis. This file
-currently implements the Section 3 plots (3.1 distance trends, 3.2 per-pair
-time strip). Section 1 methods (plot_decade_grid, plot_elbow_grid) live
-alongside these on the same Visualizer class in the full notebook and are
-not reproduced here.
+Plotting helpers for Section 2 of the FMA analysis (genre-pair PCA centroid
+distances over time): plot_pair_distance_trends (2.1) and
+plot_pair_time_strip (2.2).
 
 All methods are called as `Visualizer.method(...)` (static, no instance
 state) to match the calling convention used throughout report.ipynb.
@@ -28,7 +26,7 @@ TEXT_COLOR = "#aaaaaa"
 class Visualizer:
 
     # ================================================================
-    # 3.1 — Distance trends, small multiples by anchor genre
+    # 2.1 — Distance trends, small multiples by anchor genre
     # ================================================================
     @staticmethod
     def plot_pair_distance_trends(pair_result: GenrePairResult):
@@ -96,7 +94,7 @@ class Visualizer:
         plt.tight_layout(rect=[0, 0.06, 1, 0.94])
 
     # ================================================================
-    # 3.2 — Per-pair time strip (interesting pairs)
+    # 2.2 — Per-pair time strip (interesting pairs)
     # ================================================================
     @staticmethod
     def plot_pair_time_strip(pair_result: GenrePairResult, pairs: List[Tuple[str, str]]):

@@ -1,7 +1,7 @@
 """
 genre_pair_analysis.py
 
-Section 3 of the FMA analysis: fit one global PCA on standardized audio
+Section 2 of the FMA analysis: fit one global PCA on standardized audio
 features, bucket tracks into 5-year release periods, and track how far apart
 (or close together) each pair of top genres sits in PCA-2D over time.
 
@@ -32,7 +32,7 @@ PERIOD_WIDTH = 5
 
 @dataclass
 class GenrePairResult:
-    """Everything the Section 3 plots (3.1-3.4) need."""
+    """Everything the Section 2 plots (2.1-2.4) need."""
 
     X_pca: pd.DataFrame                      # index=track_id, cols=['PC1','PC2','period','genre']
     genres: List[str]
