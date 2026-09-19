@@ -1,0 +1,235 @@
++*In[8]:*+
+[source, ipython3]
+----
+import numpy as np
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+import os
+import random
+import csv
+%matplotlib inline
+----
+
+
++*In[15]:*+
+[source, ipython3]
+----
+import zipfile
+----
+
+
++*In[23]:*+
+[source, ipython3]
+----
+path = os.path.abspath(os.path.join(os.getcwd(), '..'))
+path = os.path.join(path,'companies_no_subindustry.zip')
+print(path)
+----
+
+
++*Out[23]:*+
+----
+/Users/hualesan/anaconda_projects/companies_no_subindustry.zip
+----
+
+
++*In[24]:*+
+[source, ipython3]
+----
+with zipfile.ZipFile(path) as z:
+    print(z.namelist())
+----
+
+
++*Out[24]:*+
+----
+['companies_no_subindustry.csv', '__MACOSX/._companies_no_subindustry.csv']
+----
+
+
++*In[42]:*+
+[source, ipython3]
+----
+with zipfile.ZipFile(path) as z:
+    with z.open('companies_no_subindustry.csv') as f:
+        df = pd.read_csv(f)
+----
+
+
++*In[69]:*+
+[source, ipython3]
+----
+missing_included = df['included'].isna().sum()
+print("Missing inclusion dates:", missing_included)
+----
+
+
++*Out[69]:*+
+----
+Missing inclusion dates: 45
+----
+
+
++*In[70]:*+
+[source, ipython3]
+----
+df2 = df.dropna(subset=['included']).copy()
+
+df2['included'] = pd.to_datetime(df2['included'], dayfirst=True, errors='coerce')
+
+oldest = df2.loc[df2['included'].idxmin()]
+youngest = df2.loc[df2['included'].idxmax()]
+
+print("Oldest constituent:")
+print(oldest[['Symbol', 'Security', 'included']])
+
+print("\nYoungest constituent:")
+print(youngest[['Symbol', 'Security', 'included']])
+----
+
+
++*Out[70]:*+
+----
+Oldest constituent:
+Symbol                       MO
+Security                 Altria
+included    1957-03-04 00:00:00
+Name: 25, dtype: object
+
+Youngest constituent:
+Symbol                     ACGL
+Security     Arch Capital Group
+included    2022-11-01 00:00:00
+Name: 48, dtype: object
+----
+
+
++*In[71]:*+
+[source, ipython3]
+----
+df2['Founded_year'] = pd.to_numeric(df2['Founded'].astype(str).str[:4], errors='coerce')
+
+current_year = pd.Timestamp.today().year
+df2['Age'] = current_year - df2['Founded_year']
+
+median_age = df2['Age'].median()
+print("\nMedian age:", median_age)
+----
+
+
++*Out[71]:*+
+----
+
+Median age: 54.5
+----
+
+
++*In[72]:*+
+[source, ipython3]
+----
+sector_counts = df2['GICS_Sector'].value_counts()
+print(sector_counts)
+
+sector_counts.plot(kind='pie', autopct='%1.1f%%', figsize=(8,8))
+plt.title('Proportion of companies by sector')
+plt.ylabel('')
+plt.show()
+----
+
+
++*Out[72]:*+
+----
+GICS_Sector
+Information Technology    68
+Industrials               66
+Health Care               60
+Financials                55
+Consumer Discretionary    52
+Consumer Staples          33
+Real Estate               30
+Materials                 26
+Communication Services    23
+Utilities                 23
+Energy                    22
+Name: count, dtype: int64
+
+![png](output_8_1.png)
+----
+
+
++*In[74]:*+
+[source, ipython3]
+----
+df2['state'] = df2['hq'].astype(str).str.split(',').str[-1].str.strip()
+
+state_counts = df2['state'].value_counts()
+print(state_counts)
+----
+
+
++*Out[74]:*+
+----
+state
+California                    65
+New York                      44
+Texas                         41
+Illinois                      31
+Pennsylvania                  19
+Massachusetts                 18
+Ohio                          17
+North Carolina                16
+Georgia                       16
+Florida                       15
+New Jersey                    15
+Virginia                      15
+Connecticut                   13
+Minnesota                     13
+Washington                    12
+Michigan                      10
+Tennessee                      8
+Colorado                       7
+Ireland                        7
+Indiana                        6
+Wisconsin                      6
+Missouri                       6
+Arizona                        5
+Maryland                       5
+Nevada                         4
+Oklahoma                       4
+Rhode Island                   4
+United Kingdom                 4
+Switzerland                    3
+Arkansas                       3
+Louisiana                      3
+Idaho                          2
+Netherlands                    2
+Alabama                        2
+Utah                           2
+Nebraska                       2
+Delaware                       2
+Kentucky                       2
+Bermuda                        2
+Maine                          1
+D.C.                           1
+Oregon                         1
+Iowa                           1
+UK                             1
+Kingdom of the Netherlands     1
+Israel                         1
+Name: count, dtype: int64
+----
+
+
++*In[ ]:*+
+[source, ipython3]
+----
+
+----
+
+
++*In[ ]:*+
+[source, ipython3]
+----
+
+----
